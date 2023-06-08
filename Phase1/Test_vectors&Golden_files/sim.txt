@@ -1,0 +1,80 @@
+sim(cp)
+char *cp;
+{
+   char buf[MAXLINE];
+   FILE *fd;
+   NSTRUC *np;
+   int nd;
+   int val;
+   int i, j, k;
+   sscanf(cp, "%s", buf);
+   if((fd = fopen(buf,"r")) == NULL){
+      printf("PI_File %s does not exit!\n", buf);
+      return;
+   }
+
+   fseek(fd, 0L, 0);
+   while(fscanf(fd, "%d,%d", &nd, &val) != EOF){
+      for(i = 0; i < Nnodes; i++){
+        np = &Node[i];
+        if(np->num == nd) np->val = val;
+      }
+   }
+   fclose(fd);
+
+
+   for(i = 1; i <= level_num; i++){
+      for(j = 0; j < Nnodes; j++){
+         np = &Node[j];
+         if(np->num == 10) printf("the val44444 %d \n", np->val);
+         if(np->level == i) {
+            if(np->num == 10) printf("the val55555 %d \n", np->val);
+            switch(np->type) {
+               //case 0: //PI
+               case 1: np->val = np->unodes[0]->val;//branch
+               case 2: //XOR
+                  np->val = np->unodes[0]->val;
+                  for(k = 1; k < np->fin; k++){
+                     np->val = np->val ^ np->unodes[k]->val;
+                  }
+               case 3: //OR
+                  np->val = np->unodes[0]->val;
+                  for(k = 1; k < np->fin; k++){
+                     np->val = np->val | np->unodes[k]->val;
+                  }
+               case 4: //NOR
+                  np->val = np->unodes[0]->val;
+                  for(k = 1; k < np->fin; k++){
+                     np->val = np->val | np->unodes[k]->val;
+                  }
+                  np->val = ~np->val;
+               case 5: np->val = !np->unodes[0]->val;//NOT
+               case 6: //NAND
+                  np->val = np->unodes[0]->val;
+                  if(np->num == 10) printf("the val1111 %d \n", np->val);
+                  if(np->num == 10) printf("the unodes0 is %d \n", np->unodes[0]->val);
+                  if(np->num == 10) printf("the level is %d \n", np->level);
+                  for(k = 1; k < np->fin; k++){
+                    if(np->num == 10) printf("the unodes1 is %d\n", np->unodes[1]->val);
+                     np->val = np->val & np->unodes[k]->val;
+                     if(np->num == 10) printf("the val2222 %d \n", np->val);
+                  }
+                  np->val = 0 ? 1 : 0;
+                  if(np->num == 10) printf("the val33333 %d \n", np->val);
+               case 7: //AND
+                  np->val = np->unodes[0]->val;
+                  for(k = 1; k < np->fin; k++){
+                     np->val = np->val & np->unodes[k]->val;
+                  }
+            }
+         }
+      }
+   }
+    for(i = 0; i < Nnodes; i++){
+      np = &Node[i];
+      printf("output %d %d\n", np->num, np->val);
+    }  
+    //for(i = 0; i < Npo; i++){
+    //    printf("the output %d is %d", Poutput[i]->num, Poutput[i]->val);
+    //}
+}

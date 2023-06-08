@@ -1,0 +1,4 @@
+c499_all_fault.txt contains all the SA faults in the c499.
+c499_compact.txt contains the multiple test patterns.
+c499_rfl.txt is the reduced fault list.
+c499_pfs_out.txt is the PFS result generated using c499_rfl.txt and c499_compact.txt
